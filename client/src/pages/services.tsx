@@ -53,14 +53,13 @@ export default function Services() {
   ];
 
   const { data: services = testServices, isLoading = false } = useQuery({
-    queryKey: ["/api/services", {
-      search: searchTerm,
-      categoryId: selectedCategory,
-    }],
+    queryKey: ["/api/services", searchTerm, selectedCategory],
+    enabled: false, // Désactiver l'API, utiliser les données de test
   });
 
   const { data: categories = testServiceCategories } = useQuery({
     queryKey: ["/api/service-categories"],
+    enabled: false, // Désactiver l'API, utiliser les données de test
   });
 
   const handleSearch = (e: React.FormEvent) => {

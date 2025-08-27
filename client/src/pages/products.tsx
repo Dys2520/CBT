@@ -61,14 +61,8 @@ export default function Products() {
   ];
 
   const { data: products = testProducts, isLoading = false } = useQuery({
-    queryKey: ["/api/products", {
-      search: searchTerm,
-      categoryId: selectedCategory === "all" ? "" : selectedCategory,
-      brand: selectedBrand === "all" ? "" : selectedBrand,
-      minPrice: minPrice ? parseFloat(minPrice) : undefined,
-      maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
-      inStock: inStockOnly ? true : undefined,
-    }],
+    queryKey: ["/api/products", searchTerm, selectedCategory, selectedBrand, minPrice, maxPrice, inStockOnly],
+    enabled: false, // Désactiver l'API, utiliser les données de test
   });
 
   const testCategories = [
@@ -79,6 +73,7 @@ export default function Products() {
 
   const { data: categories = testCategories } = useQuery({
     queryKey: ["/api/product-categories"],
+    enabled: false, // Désactiver l'API, utiliser les données de test
   });
 
   const brands = [...new Set((products as any[]).map((p: any) => p.brand).filter(Boolean))];
