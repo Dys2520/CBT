@@ -57,6 +57,12 @@ export default function Admin() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
+  // Debug - pour voir si les clics fonctionnent
+  const handleTabChange = (tab: string) => {
+    console.log("Switching to tab:", tab);
+    setActiveTab(tab);
+  };
+
   // Données de test pour l'admin - Version étendue avec plus de données
   const testOrders = [
     { id: "CBT-021", client: "Jean Dupont", email: "jean@example.com", date: "2023-06-15", time: "10:30", total: 500, status: "pending", payment: "Chèque", month: "Juin", category: "Électronique" },
@@ -246,7 +252,7 @@ export default function Admin() {
 
         <nav className="space-y-2">
           <button
-            onClick={() => setActiveTab("dashboard")}
+            onClick={() => handleTabChange("dashboard")}
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeTab === "dashboard" ? "bg-white/20" : "hover:bg-white/10"
             }`}
@@ -257,7 +263,7 @@ export default function Admin() {
           </button>
           
           <button
-            onClick={() => setActiveTab("orders")}
+            onClick={() => handleTabChange("orders")}
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeTab === "orders" ? "bg-white/20" : "hover:bg-white/10"
             }`}
@@ -268,7 +274,7 @@ export default function Admin() {
           </button>
           
           <button
-            onClick={() => setActiveTab("products")}
+            onClick={() => handleTabChange("products")}
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeTab === "products" ? "bg-white/20" : "hover:bg-white/10"
             }`}
@@ -279,7 +285,7 @@ export default function Admin() {
           </button>
           
           <button
-            onClick={() => setActiveTab("services")}
+            onClick={() => handleTabChange("services")}
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeTab === "services" ? "bg-white/20" : "hover:bg-white/10"
             }`}
@@ -290,7 +296,7 @@ export default function Admin() {
           </button>
           
           <button
-            onClick={() => setActiveTab("categories")}
+            onClick={() => handleTabChange("categories")}
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeTab === "categories" ? "bg-white/20" : "hover:bg-white/10"
             }`}
@@ -301,7 +307,7 @@ export default function Admin() {
           </button>
           
           <button
-            onClick={() => setActiveTab("clients")}
+            onClick={() => handleTabChange("clients")}
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeTab === "clients" ? "bg-white/20" : "hover:bg-white/10"
             }`}
@@ -312,7 +318,7 @@ export default function Admin() {
           </button>
           
           <button
-            onClick={() => setActiveTab("sav")}
+            onClick={() => handleTabChange("sav")}
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeTab === "sav" ? "bg-white/20" : "hover:bg-white/10"
             }`}
@@ -323,7 +329,7 @@ export default function Admin() {
           </button>
           
           <button
-            onClick={() => setActiveTab("settings")}
+            onClick={() => handleTabChange("settings")}
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
               activeTab === "settings" ? "bg-white/20" : "hover:bg-white/10"
             }`}
@@ -365,6 +371,11 @@ export default function Admin() {
 
         {/* Content */}
         <div className="p-8">
+          {/* Debug indicator */}
+          <div className="mb-4 text-sm text-gray-500">
+            Onglet actuel: {activeTab}
+          </div>
+          
           {/* Dashboard Tab */}
           {activeTab === "dashboard" && (
             <div className="space-y-8">
@@ -632,19 +643,19 @@ export default function Admin() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <Button className="flex flex-col items-center gap-2 h-20" onClick={() => setActiveTab("orders")} data-testid="quick-action-orders">
+                    <Button className="flex flex-col items-center gap-2 h-20" onClick={() => handleTabChange("orders")} data-testid="quick-action-orders">
                       <ShoppingCart className="h-6 w-6" />
                       <span className="text-sm">Commandes</span>
                     </Button>
-                    <Button className="flex flex-col items-center gap-2 h-20" onClick={() => setActiveTab("products")} data-testid="quick-action-products">
+                    <Button className="flex flex-col items-center gap-2 h-20" onClick={() => handleTabChange("products")} data-testid="quick-action-products">
                       <Package className="h-6 w-6" />
                       <span className="text-sm">Produits</span>
                     </Button>
-                    <Button className="flex flex-col items-center gap-2 h-20" onClick={() => setActiveTab("clients")} data-testid="quick-action-clients">
+                    <Button className="flex flex-col items-center gap-2 h-20" onClick={() => handleTabChange("clients")} data-testid="quick-action-clients">
                       <Users className="h-6 w-6" />
                       <span className="text-sm">Clients</span>
                     </Button>
-                    <Button className="flex flex-col items-center gap-2 h-20" onClick={() => setActiveTab("sav")} data-testid="quick-action-sav">
+                    <Button className="flex flex-col items-center gap-2 h-20" onClick={() => handleTabChange("sav")} data-testid="quick-action-sav">
                       <MessageCircle className="h-6 w-6" />
                       <span className="text-sm">SAV</span>
                     </Button>
@@ -652,7 +663,7 @@ export default function Admin() {
                       <Download className="h-6 w-6" />
                       <span className="text-sm">Exporter</span>
                     </Button>
-                    <Button variant="outline" className="flex flex-col items-center gap-2 h-20" onClick={() => setActiveTab("settings")} data-testid="quick-action-settings">
+                    <Button variant="outline" className="flex flex-col items-center gap-2 h-20" onClick={() => handleTabChange("settings")} data-testid="quick-action-settings">
                       <Settings className="h-6 w-6" />
                       <span className="text-sm">Paramètres</span>
                     </Button>
