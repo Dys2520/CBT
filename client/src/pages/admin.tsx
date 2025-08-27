@@ -3,295 +3,980 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, MessageCircle, AlertTriangle, Users, TrendingUp, Calendar } from "lucide-react";
+import { 
+  Package, 
+  MessageCircle, 
+  AlertTriangle, 
+  Users, 
+  TrendingUp, 
+  Calendar,
+  ShoppingCart,
+  Euro,
+  Settings,
+  LogOut,
+  Search,
+  Filter,
+  Download,
+  Plus,
+  Eye,
+  Edit,
+  Trash2,
+  Grid3X3,
+  Warehouse
+} from "lucide-react";
 
 export default function Admin() {
-  const { data: allOrders = [] } = useQuery({
-    queryKey: ["/api/admin/orders"],
-  });
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  const { data: allSavTickets = [] } = useQuery({
-    queryKey: ["/api/admin/sav-tickets"],
-  });
+  // Données de test pour l'admin
+  const testOrders = [
+    { id: "CBT-021", client: "Jean Dupont", email: "jean@example.com", date: "15/06/2023", time: "10:30", total: "500€", status: "pending", payment: "Chèque" },
+    { id: "CBT-022", client: "Marie Martin", email: "marie@example.com", date: "15/06/2023", time: "14:20", total: "750€", status: "confirmed", payment: "Carte" },
+    { id: "CBT-023", client: "Paul Durand", email: "paul@example.com", date: "15/06/2023", time: "16:45", total: "300€", status: "shipped", payment: "Virement" },
+    { id: "CBT-024", client: "Sophie Petit", email: "sophie@example.com", date: "16/06/2023", time: "09:15", total: "1200€", status: "delivered", payment: "Carte" },
+    { id: "CBT-025", client: "Luc Bernard", email: "luc@example.com", date: "16/06/2023", time: "11:30", total: "450€", status: "cancelled", payment: "Chèque" },
+  ];
 
-  const { data: allSuggestions = [] } = useQuery({
-    queryKey: ["/api/admin/suggestions"],
-  });
+  const testProducts = [
+    { id: "PDT-021", name: "Ordinateur portable", category: "Électronique", price: "500€", stock: 15, status: "in_stock" },
+    { id: "PDT-022", name: "Clavier mécanique", category: "Périphériques", price: "80€", stock: 3, status: "low_stock" },
+    { id: "PDT-023", name: "Souris ergonomique", category: "Périphériques", price: "45€", stock: 0, status: "out_of_stock" },
+    { id: "PDT-024", name: "Écran 24 pouces", category: "Électronique", price: "250€", stock: 8, status: "in_stock" },
+  ];
 
-  // Calculate stats
-  const totalRevenue = allOrders.reduce((sum: number, order: any) => 
-    sum + parseFloat(order.total || 0), 0
+  const testCategories = [
+    { id: "1", name: "Électronique", description: "Produits électroniques divers", productCount: 4, color: "green" },
+    { id: "2", name: "Périphériques", description: "Périphériques informatiques", productCount: 4, color: "blue" },
+    { id: "3", name: "Accessoires", description: "Accessoires et câbles", productCount: 4, color: "orange" },
+  ];
+
+  const testClients = [
+    { id: "1", name: "Jean Dupont", email: "jean@example.com", phone: "06 12 34 56 78", orders: 5, totalSpent: "2500€", status: "active" },
+    { id: "2", name: "Marie Martin", email: "marie@example.com", phone: "06 87 65 43 21", orders: 3, totalSpent: "1800€", status: "active" },
+    { id: "3", name: "Paul Durand", email: "paul@example.com", phone: "06 55 44 33 22", orders: 1, totalSpent: "300€", status: "inactive" },
+  ];
+
+  const testSavTickets = [
+    { id: "SAV-001", client: "Jean Dupont", product: "Ordinateur portable", issue: "Écran défaillant", status: "pending", date: "15/06/2023", priority: "high" },
+    { id: "SAV-002", client: "Marie Martin", product: "Clavier mécanique", issue: "Touches bloquées", status: "in_progress", date: "14/06/2023", priority: "medium" },
+    { id: "SAV-003", client: "Paul Durand", product: "Souris", issue: "Clic défaillant", status: "resolved", date: "10/06/2023", priority: "low" },
+  ];
+
+  const getStatusBadge = (status: string, type: string = "order") => {
+    const styles = {
+      pending: "bg-yellow-100 text-yellow-800",
+      confirmed: "bg-blue-100 text-blue-800",
+      shipped: "bg-purple-100 text-purple-800", 
+      delivered: "bg-green-100 text-green-800",
+      cancelled: "bg-red-100 text-red-800",
+      in_stock: "bg-green-100 text-green-800",
+      low_stock: "bg-yellow-100 text-yellow-800",
+      out_of_stock: "bg-red-100 text-red-800",
+      in_progress: "bg-blue-100 text-blue-800",
+      resolved: "bg-green-100 text-green-800",
+      active: "bg-green-100 text-green-800",
+      inactive: "bg-gray-100 text-gray-800",
+      high: "bg-red-100 text-red-800",
+      medium: "bg-yellow-100 text-yellow-800",
+      low: "bg-green-100 text-green-800"
+    };
+
+    const labels = {
+      pending: "En attente",
+      confirmed: "Confirmée", 
+      shipped: "Expédiée",
+      delivered: "Livrée",
+      cancelled: "Annulée",
+      in_stock: "En stock",
+      low_stock: "Stock bas",
+      out_of_stock: "Épuisé",
+      in_progress: "En cours",
+      resolved: "Résolu",
+      active: "Actif",
+      inactive: "Inactif",
+      high: "Haute",
+      medium: "Moyenne",
+      low: "Basse"
+    };
+
+    return (
+      <Badge className={`${styles[status as keyof typeof styles]} border-0`}>
+        {labels[status as keyof typeof labels] || status}
+      </Badge>
+    );
+  };
+
+  const StatCard = ({ title, value, icon: Icon, change, changeType }: any) => (
+    <Card>
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-2xl font-bold">{value}</p>
+            <p className={`text-xs flex items-center ${changeType === 'increase' ? 'text-green-600' : 'text-red-600'}`}>
+              {changeType === 'increase' ? '↗' : '↘'} {change}
+            </p>
+          </div>
+          <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Icon className="h-6 w-6 text-primary" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 
-  const pendingOrders = allOrders.filter((order: any) => order.status === "pending").length;
-  const activeSavTickets = allSavTickets.filter((ticket: any) => 
-    ticket.status === "pending" || ticket.status === "in_progress"
-  ).length;
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800";
-      case "confirmed":
-        return "bg-blue-100 text-blue-800";
-      case "processing":
-        return "bg-purple-100 text-purple-800";
-      case "shipped":
-        return "bg-orange-100 text-orange-800";
-      case "delivered":
-        return "bg-green-100 text-green-800";
-      case "cancelled":
-        return "bg-red-100 text-red-800";
-      case "in_progress":
-        return "bg-blue-100 text-blue-800";
-      case "resolved":
-        return "bg-green-100 text-green-800";
-      case "closed":
-        return "bg-gray-100 text-gray-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getStatusLabel = (status: string, type: "order" | "ticket" = "order") => {
-    if (type === "ticket") {
-      switch (status) {
-        case "pending":
-          return "En attente";
-        case "in_progress":
-          return "En cours";
-        case "resolved":
-          return "Résolu";
-        case "closed":
-          return "Fermé";
-        default:
-          return status;
-      }
-    }
-
-    switch (status) {
-      case "pending":
-        return "En attente";
-      case "confirmed":
-        return "Confirmée";
-      case "processing":
-        return "En traitement";
-      case "shipped":
-        return "Expédiée";
-      case "delivered":
-        return "Livrée";
-      case "cancelled":
-        return "Annulée";
-      default:
-        return status;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-background py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center mb-8">
-          <TrendingUp className="h-8 w-8 text-primary mr-3" />
-          <h1 className="text-3xl font-bold text-foreground" data-testid="admin-title">
-            Administration CBT
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar */}
+      <div className="w-64 bg-[#1a1f71] text-white p-6 fixed h-full">
+        <div className="mb-8">
+          <h1 className="text-xl font-bold">CBT Admin</h1>
+        </div>
+        
+        <div className="mb-8">
+          <div className="flex items-center space-x-3 p-3 bg-white/10 rounded-lg">
+            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+              <Users className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="font-medium">Admin User</p>
+              <p className="text-sm opacity-80">Administrateur</p>
+            </div>
+          </div>
+        </div>
+
+        <nav className="space-y-2">
+          <button
+            onClick={() => setActiveTab("dashboard")}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeTab === "dashboard" ? "bg-white/20" : "hover:bg-white/10"
+            }`}
+            data-testid="nav-dashboard"
+          >
+            <TrendingUp className="h-5 w-5" />
+            <span>Tableau de bord</span>
+          </button>
+          
+          <button
+            onClick={() => setActiveTab("orders")}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeTab === "orders" ? "bg-white/20" : "hover:bg-white/10"
+            }`}
+            data-testid="nav-orders"
+          >
+            <ShoppingCart className="h-5 w-5" />
+            <span>Commandes</span>
+          </button>
+          
+          <button
+            onClick={() => setActiveTab("products")}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeTab === "products" ? "bg-white/20" : "hover:bg-white/10"
+            }`}
+            data-testid="nav-products"
+          >
+            <Package className="h-5 w-5" />
+            <span>Produits</span>
+          </button>
+          
+          <button
+            onClick={() => setActiveTab("services")}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeTab === "services" ? "bg-white/20" : "hover:bg-white/10"
+            }`}
+            data-testid="nav-services"
+          >
+            <Settings className="h-5 w-5" />
+            <span>Services</span>
+          </button>
+          
+          <button
+            onClick={() => setActiveTab("categories")}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeTab === "categories" ? "bg-white/20" : "hover:bg-white/10"
+            }`}
+            data-testid="nav-categories"
+          >
+            <Grid3X3 className="h-5 w-5" />
+            <span>Catégories</span>
+          </button>
+          
+          <button
+            onClick={() => setActiveTab("clients")}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeTab === "clients" ? "bg-white/20" : "hover:bg-white/10"
+            }`}
+            data-testid="nav-clients"
+          >
+            <Users className="h-5 w-5" />
+            <span>Clients</span>
+          </button>
+          
+          <button
+            onClick={() => setActiveTab("sav")}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeTab === "sav" ? "bg-white/20" : "hover:bg-white/10"
+            }`}
+            data-testid="nav-sav"
+          >
+            <MessageCircle className="h-5 w-5" />
+            <span>SAV</span>
+          </button>
+          
+          <button
+            onClick={() => setActiveTab("settings")}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+              activeTab === "settings" ? "bg-white/20" : "hover:bg-white/10"
+            }`}
+            data-testid="nav-settings"
+          >
+            <Settings className="h-5 w-5" />
+            <span>Paramètre</span>
+          </button>
+          
+          <button
+            onClick={() => window.location.href = "/api/logout"}
+            className="w-full flex items-center space-x-3 p-3 rounded-lg text-red-300 hover:bg-red-500/20 transition-colors"
+            data-testid="nav-logout"
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Déconnexion</span>
+          </button>
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 ml-64">
+        {/* Header */}
+        <div className="bg-white border-b px-8 py-4 flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-gray-900">
+            {activeTab === "dashboard" && "Tableau de bord"}
+            {activeTab === "orders" && "Gestion des Commandes"}
+            {activeTab === "products" && "Gestion des Produits"}
+            {activeTab === "services" && "Gestion des Services"}
+            {activeTab === "categories" && "Gestion des Catégories"}
+            {activeTab === "clients" && "Gestion des Clients"}
+            {activeTab === "sav" && "Service Après-Vente"}
+            {activeTab === "settings" && "Paramètres"}
           </h1>
+          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <Users className="h-5 w-5 text-primary" />
+          </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card data-testid="stat-revenue">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <TrendingUp className="h-8 w-8 text-green-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Chiffre d'affaires</p>
-                  <p className="text-2xl font-bold text-foreground">
-                    {totalRevenue.toLocaleString()} FCFA
-                  </p>
-                </div>
+        {/* Content */}
+        <div className="p-8">
+          {/* Dashboard Tab */}
+          {activeTab === "dashboard" && (
+            <div className="space-y-8">
+              {/* Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard
+                  title="Commandes totales"
+                  value="153"
+                  icon={ShoppingCart}
+                  change="+12% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Revenus"
+                  value="7813€"
+                  icon={Euro}
+                  change="+8% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Clients"
+                  value="13"
+                  icon={Users}
+                  change="+5% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Alertes stock bas"
+                  value="5"
+                  icon={AlertTriangle}
+                  change="-2% depuis le mois dernier"
+                  changeType="decrease"
+                />
               </div>
-            </CardContent>
-          </Card>
 
-          <Card data-testid="stat-orders">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Package className="h-8 w-8 text-blue-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Commandes totales</p>
-                  <p className="text-2xl font-bold text-foreground">{allOrders.length}</p>
-                  <p className="text-xs text-muted-foreground">{pendingOrders} en attente</p>
-                </div>
+              {/* Recent Orders and Low Stock */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Commandes récentes</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {testOrders.slice(0, 5).map((order) => (
+                        <div key={order.id} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div>
+                            <p className="font-medium">{order.id}</p>
+                            <p className="text-sm text-muted-foreground">{order.client}</p>
+                            <p className="text-sm text-muted-foreground">{order.date}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium">{order.total}</p>
+                            {getStatusBadge(order.status)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 text-center">
+                      <Button variant="link" onClick={() => setActiveTab("orders")}>
+                        Voir toutes les commandes
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Produits en stock bas</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {testProducts.filter(p => p.status === "low_stock" || p.status === "out_of_stock").map((product) => (
+                        <div key={product.id} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div>
+                            <p className="font-medium">{product.name}</p>
+                            <p className="text-sm text-muted-foreground">{product.category}</p>
+                            <p className="text-sm text-muted-foreground">{product.price}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium">Stock: {product.stock}</p>
+                            {getStatusBadge(product.status)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 text-center">
+                      <Button variant="link" onClick={() => setActiveTab("products")}>
+                        Gérer les produits
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card data-testid="stat-sav">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <AlertTriangle className="h-8 w-8 text-orange-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Tickets SAV</p>
-                  <p className="text-2xl font-bold text-foreground">{allSavTickets.length}</p>
-                  <p className="text-xs text-muted-foreground">{activeSavTickets} actifs</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card data-testid="stat-suggestions">
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <MessageCircle className="h-8 w-8 text-purple-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Suggestions</p>
-                  <p className="text-2xl font-bold text-foreground">{allSuggestions.length}</p>
-                  <p className="text-xs text-muted-foreground">Ce mois</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Management Tabs */}
-        <Tabs defaultValue="orders" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="orders" data-testid="tab-orders">Commandes</TabsTrigger>
-            <TabsTrigger value="sav" data-testid="tab-sav">SAV</TabsTrigger>
-            <TabsTrigger value="suggestions" data-testid="tab-suggestions">Suggestions</TabsTrigger>
-          </TabsList>
+            </div>
+          )}
 
           {/* Orders Tab */}
-          <TabsContent value="orders" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle data-testid="orders-section-title">Gestion des commandes</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {allOrders.length === 0 ? (
-                  <div className="text-center py-8" data-testid="no-orders-admin">
-                    <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Aucune commande trouvée</p>
+          {activeTab === "orders" && (
+            <div className="space-y-6">
+              {/* Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard
+                  title="Total Commandes"
+                  value="153"
+                  icon={ShoppingCart}
+                  change="+12% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="En attente"
+                  value="18"
+                  icon={Calendar}
+                  change="+5% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Livrées"
+                  value="134"
+                  icon={Package}
+                  change="+5% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Annulées"
+                  value="5"
+                  icon={AlertTriangle}
+                  change="-2% depuis le mois dernier"
+                  changeType="decrease"
+                />
+              </div>
+
+              {/* Filters and Actions */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-between">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Rechercher"
+                      className="pl-10 w-64"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      data-testid="search-orders"
+                    />
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    {allOrders.slice(0, 10).map((order: any) => (
-                      <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg" data-testid={`admin-order-${order.id}`}>
-                        <div className="flex items-center space-x-4">
-                          <div>
-                            <h4 className="font-medium text-foreground">{order.orderNumber}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {new Date(order.createdAt).toLocaleDateString("fr-FR")}
-                            </p>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-48" data-testid="filter-status">
+                      <SelectValue placeholder="Tous les statuts" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Tous les statuts</SelectItem>
+                      <SelectItem value="pending">En attente</SelectItem>
+                      <SelectItem value="confirmed">Confirmée</SelectItem>
+                      <SelectItem value="shipped">Expédiée</SelectItem>
+                      <SelectItem value="delivered">Livrée</SelectItem>
+                      <SelectItem value="cancelled">Annulée</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input type="date" placeholder="Date de début" className="w-48" data-testid="date-start" />
+                  <Input type="date" placeholder="Date de fin" className="w-48" data-testid="date-end" />
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" data-testid="button-filters">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filtres avancés
+                  </Button>
+                  <Button variant="outline" data-testid="button-export">
+                    <Download className="h-4 w-4 mr-2" />
+                    Exporter
+                  </Button>
+                  <Button data-testid="button-new-order">
+                    Nouvelle commande
+                  </Button>
+                </div>
+              </div>
+
+              {/* Orders Table */}
+              <Card>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="text-left p-4 font-medium">
+                            <input type="checkbox" className="rounded" />
+                          </th>
+                          <th className="text-left p-4 font-medium">ID</th>
+                          <th className="text-left p-4 font-medium">Client</th>
+                          <th className="text-left p-4 font-medium">Date</th>
+                          <th className="text-left p-4 font-medium">Total</th>
+                          <th className="text-left p-4 font-medium">Statut</th>
+                          <th className="text-left p-4 font-medium">Paiement</th>
+                          <th className="text-left p-4 font-medium">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {testOrders.map((order) => (
+                          <tr key={order.id} className="border-t hover:bg-gray-50">
+                            <td className="p-4">
+                              <input type="checkbox" className="rounded" />
+                            </td>
+                            <td className="p-4 font-medium">{order.id}</td>
+                            <td className="p-4">
+                              <div>
+                                <p className="font-medium">{order.client}</p>
+                                <p className="text-sm text-muted-foreground">{order.email}</p>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div>
+                                <p>{order.date}</p>
+                                <p className="text-sm text-muted-foreground">{order.time}</p>
+                              </div>
+                            </td>
+                            <td className="p-4 font-medium">{order.total}</td>
+                            <td className="p-4">{getStatusBadge(order.status)}</td>
+                            <td className="p-4">{order.payment}</td>
+                            <td className="p-4">
+                              <div className="flex gap-2">
+                                <Button size="sm" variant="outline" data-testid={`view-order-${order.id}`}>
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button size="sm" variant="outline" data-testid={`edit-order-${order.id}`}>
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button size="sm" variant="outline" data-testid={`delete-order-${order.id}`}>
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="p-4 border-t flex items-center justify-between">
+                    <p className="text-sm text-muted-foreground">
+                      Affichage de 1 à 5 sur 24 résultats
+                    </p>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, "...", 6, 7].map((page, idx) => (
+                        <Button
+                          key={idx}
+                          size="sm"
+                          variant={page === 1 ? "default" : "outline"}
+                          className="w-8 h-8"
+                          data-testid={`page-${page}`}
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Products Tab */}
+          {activeTab === "products" && (
+            <div className="space-y-6">
+              {/* Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard
+                  title="En stock"
+                  value="153"
+                  icon={Package}
+                  change="+12% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Stock bas"
+                  value="18"
+                  icon={AlertTriangle}
+                  change="+5% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Livrées"
+                  value="134"
+                  icon={ShoppingCart}
+                  change="+5% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Épuisées"
+                  value="5"
+                  icon={AlertTriangle}
+                  change="-2% depuis le mois dernier"
+                  changeType="decrease"
+                />
+              </div>
+
+              {/* Filters and Actions */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-between">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Rechercher"
+                      className="pl-10 w-64"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      data-testid="search-products"
+                    />
+                  </div>
+                  <Select>
+                    <SelectTrigger className="w-48" data-testid="filter-product-status">
+                      <SelectValue placeholder="Tous les statuts" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Tous les statuts</SelectItem>
+                      <SelectItem value="in_stock">En stock</SelectItem>
+                      <SelectItem value="low_stock">Stock bas</SelectItem>
+                      <SelectItem value="out_of_stock">Épuisé</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input type="date" placeholder="Date de début" className="w-48" data-testid="product-date-start" />
+                  <Input type="date" placeholder="Date de fin" className="w-48" data-testid="product-date-end" />
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="bg-yellow-500 text-white" data-testid="button-category">
+                    Catégorie
+                  </Button>
+                  <Button data-testid="button-new-product">
+                    Nouveau produit
+                  </Button>
+                </div>
+              </div>
+
+              {/* Products Table */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Liste des produits</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="text-left p-4 font-medium">
+                            <input type="checkbox" className="rounded" />
+                          </th>
+                          <th className="text-left p-4 font-medium">ID</th>
+                          <th className="text-left p-4 font-medium">Nom</th>
+                          <th className="text-left p-4 font-medium">Catégorie</th>
+                          <th className="text-left p-4 font-medium">Prix</th>
+                          <th className="text-left p-4 font-medium">Stock</th>
+                          <th className="text-left p-4 font-medium">Statut</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {testProducts.map((product) => (
+                          <tr key={product.id} className="border-t hover:bg-gray-50">
+                            <td className="p-4">
+                              <input type="checkbox" className="rounded" />
+                            </td>
+                            <td className="p-4 font-medium">{product.id}</td>
+                            <td className="p-4 font-medium">{product.name}</td>
+                            <td className="p-4">
+                              <Badge variant="outline" className="bg-blue-50 text-blue-700">
+                                {product.category}
+                              </Badge>
+                            </td>
+                            <td className="p-4 font-medium">{product.price}</td>
+                            <td className="p-4">{product.stock}</td>
+                            <td className="p-4">{getStatusBadge(product.status)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="p-4 border-t flex items-center justify-between">
+                    <p className="text-sm text-muted-foreground">
+                      Affichage de 1 à 5 sur 24 résultats
+                    </p>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, "...", 6, 7].map((page, idx) => (
+                        <Button
+                          key={idx}
+                          size="sm"
+                          variant={page === 1 ? "default" : "outline"}
+                          className="w-8 h-8"
+                          data-testid={`product-page-${page}`}
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Categories Tab */}
+          {activeTab === "categories" && (
+            <div className="space-y-6">
+              <Tabs value="categories" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="products" className="flex items-center gap-2" data-testid="tab-products">
+                    <Package className="h-4 w-4" />
+                    Produits
+                  </TabsTrigger>
+                  <TabsTrigger value="categories" className="flex items-center gap-2" data-testid="tab-categories">
+                    <Grid3X3 className="h-4 w-4" />
+                    Catégories
+                  </TabsTrigger>
+                  <TabsTrigger value="stock" className="flex items-center gap-2" data-testid="tab-stock">
+                    <Warehouse className="h-4 w-4" />
+                    Gestion de stock
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="categories" className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold">Gestion des produits</h2>
+                    <Button data-testid="button-add-category">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Ajouter une catégorie
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {testCategories.map((category) => (
+                      <Card key={category.id} className={`border-l-4 ${
+                        category.color === 'green' ? 'border-l-green-500' : 
+                        category.color === 'blue' ? 'border-l-blue-500' : 
+                        'border-l-orange-500'
+                      }`}>
+                        <CardContent className="p-6">
+                          <div className="flex justify-between items-start mb-4">
+                            <div>
+                              <h3 className="text-lg font-semibold">{category.name}</h3>
+                              <p className="text-muted-foreground text-sm">{category.description}</p>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" data-testid={`edit-category-${category.id}`}>
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button size="sm" variant="outline" className="text-red-600" data-testid={`delete-category-${category.id}`}>
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
-                          <Badge className={getStatusColor(order.status)}>
-                            {getStatusLabel(order.status)}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <span className="font-bold text-foreground">
-                            {parseInt(order.total).toLocaleString()} FCFA
-                          </span>
-                          <Button variant="outline" size="sm" data-testid={`button-view-order-admin-${order.id}`}>
-                            Voir détails
-                          </Button>
-                        </div>
-                      </div>
+                          <div className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm inline-block">
+                            {category.productCount} produits
+                          </div>
+                        </CardContent>
+                      </Card>
                     ))}
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
+                </TabsContent>
+              </Tabs>
+            </div>
+          )}
+
+          {/* Clients Tab */}
+          {activeTab === "clients" && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">Gestion des Clients</h2>
+                <Button data-testid="button-add-client">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nouveau client
+                </Button>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard
+                  title="Total Clients"
+                  value="13"
+                  icon={Users}
+                  change="+5% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Clients Actifs"
+                  value="10"
+                  icon={Users}
+                  change="+3% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Nouveaux ce mois"
+                  value="2"
+                  icon={Users}
+                  change="+100% depuis le mois dernier"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Chiffre d'affaires moyen"
+                  value="1535€"
+                  icon={Euro}
+                  change="+8% depuis le mois dernier"
+                  changeType="increase"
+                />
+              </div>
+
+              {/* Clients Table */}
+              <Card>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="text-left p-4 font-medium">Nom</th>
+                          <th className="text-left p-4 font-medium">Email</th>
+                          <th className="text-left p-4 font-medium">Téléphone</th>
+                          <th className="text-left p-4 font-medium">Commandes</th>
+                          <th className="text-left p-4 font-medium">Total dépensé</th>
+                          <th className="text-left p-4 font-medium">Statut</th>
+                          <th className="text-left p-4 font-medium">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {testClients.map((client) => (
+                          <tr key={client.id} className="border-t hover:bg-gray-50">
+                            <td className="p-4 font-medium">{client.name}</td>
+                            <td className="p-4">{client.email}</td>
+                            <td className="p-4">{client.phone}</td>
+                            <td className="p-4">{client.orders}</td>
+                            <td className="p-4 font-medium">{client.totalSpent}</td>
+                            <td className="p-4">{getStatusBadge(client.status)}</td>
+                            <td className="p-4">
+                              <div className="flex gap-2">
+                                <Button size="sm" variant="outline" data-testid={`view-client-${client.id}`}>
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button size="sm" variant="outline" data-testid={`edit-client-${client.id}`}>
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Services Tab */}
+          {activeTab === "services" && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">Gestion des Services</h2>
+                <Button data-testid="button-add-service">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nouveau service
+                </Button>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard
+                  title="Services Actifs"
+                  value="12"
+                  icon={Settings}
+                  change="+2 ce mois"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Réservations"
+                  value="45"
+                  icon={Calendar}
+                  change="+15% ce mois"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Revenus Services"
+                  value="3240€"
+                  icon={Euro}
+                  change="+12% ce mois"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Satisfaction"
+                  value="4.8/5"
+                  icon={MessageCircle}
+                  change="+0.2 ce mois"
+                  changeType="increase"
+                />
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Services disponibles</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    Interface de gestion des services en cours de développement...
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
           {/* SAV Tab */}
-          <TabsContent value="sav" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle data-testid="sav-section-title">Gestion des tickets SAV</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {allSavTickets.length === 0 ? (
-                  <div className="text-center py-8" data-testid="no-sav-admin">
-                    <AlertTriangle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Aucun ticket SAV trouvé</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {allSavTickets.map((ticket: any) => (
-                      <div key={ticket.id} className="flex items-center justify-between p-4 border rounded-lg" data-testid={`admin-ticket-${ticket.id}`}>
-                        <div className="flex items-center space-x-4">
-                          <div>
-                            <h4 className="font-medium text-foreground">{ticket.ticketNumber}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {new Date(ticket.createdAt).toLocaleDateString("fr-FR")}
-                            </p>
-                          </div>
-                          <Badge className={getStatusColor(ticket.status)}>
-                            {getStatusLabel(ticket.status, "ticket")}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <span className="text-sm text-muted-foreground">
-                            {ticket.type.replace("_", " ")}
-                          </span>
-                          <Button variant="outline" size="sm" data-testid={`button-view-ticket-admin-${ticket.id}`}>
-                            Traiter
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
+          {activeTab === "sav" && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">Service Après-Vente</h2>
+                <Button data-testid="button-new-ticket">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nouveau ticket
+                </Button>
+              </div>
 
-          {/* Suggestions Tab */}
-          <TabsContent value="suggestions" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle data-testid="suggestions-section-title">Gestion des suggestions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {allSuggestions.length === 0 ? (
-                  <div className="text-center py-8" data-testid="no-suggestions-admin">
-                    <MessageCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Aucune suggestion trouvée</p>
+              {/* Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatCard
+                  title="Tickets Ouverts"
+                  value="8"
+                  icon={MessageCircle}
+                  change="-2 cette semaine"
+                  changeType="decrease"
+                />
+                <StatCard
+                  title="En Cours"
+                  value="3"
+                  icon={Settings}
+                  change="Stable"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Résolus ce mois"
+                  value="24"
+                  icon={Package}
+                  change="+20% ce mois"
+                  changeType="increase"
+                />
+                <StatCard
+                  title="Temps moyen"
+                  value="2.1j"
+                  icon={Calendar}
+                  change="-0.3j ce mois"
+                  changeType="decrease"
+                />
+              </div>
+
+              {/* SAV Tickets Table */}
+              <Card>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="text-left p-4 font-medium">Ticket ID</th>
+                          <th className="text-left p-4 font-medium">Client</th>
+                          <th className="text-left p-4 font-medium">Produit</th>
+                          <th className="text-left p-4 font-medium">Problème</th>
+                          <th className="text-left p-4 font-medium">Priorité</th>
+                          <th className="text-left p-4 font-medium">Statut</th>
+                          <th className="text-left p-4 font-medium">Date</th>
+                          <th className="text-left p-4 font-medium">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {testSavTickets.map((ticket) => (
+                          <tr key={ticket.id} className="border-t hover:bg-gray-50">
+                            <td className="p-4 font-medium">{ticket.id}</td>
+                            <td className="p-4">{ticket.client}</td>
+                            <td className="p-4">{ticket.product}</td>
+                            <td className="p-4">{ticket.issue}</td>
+                            <td className="p-4">{getStatusBadge(ticket.priority)}</td>
+                            <td className="p-4">{getStatusBadge(ticket.status)}</td>
+                            <td className="p-4">{ticket.date}</td>
+                            <td className="p-4">
+                              <div className="flex gap-2">
+                                <Button size="sm" variant="outline" data-testid={`view-ticket-${ticket.id}`}>
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button size="sm" variant="outline" data-testid={`edit-ticket-${ticket.id}`}>
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    {allSuggestions.map((suggestion: any) => (
-                      <div key={suggestion.id} className="p-4 border rounded-lg" data-testid={`admin-suggestion-${suggestion.id}`}>
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <h4 className="font-medium text-foreground">{suggestion.subject}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {suggestion.email} • {new Date(suggestion.createdAt).toLocaleDateString("fr-FR")}
-                            </p>
-                          </div>
-                          <Badge variant="outline">
-                            {suggestion.category}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-foreground mt-2">{suggestion.message}</p>
-                        <div className="flex items-center space-x-2 mt-4">
-                          <Button variant="outline" size="sm" data-testid={`button-reply-suggestion-${suggestion.id}`}>
-                            Répondre
-                          </Button>
-                          <Button variant="outline" size="sm" data-testid={`button-archive-suggestion-${suggestion.id}`}>
-                            Archiver
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {activeTab === "settings" && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold">Paramètres</h2>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Configuration du système</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    Interface de paramétrage en cours de développement...
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
