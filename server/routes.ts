@@ -230,12 +230,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/orders', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
+      
+      // Generate unique order number
+      const orderNumber = `CBT-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      
       const orderData = insertOrderSchema.parse({
         ...req.body,
         userId,
       });
       
-      const order = await storage.createOrder(orderData);
+      const order = await storage.createOrder({
+        ...orderData,
+        orderNumber,
+      });
       
       // Add order items from cart
       const cartItems = await storage.getCartItems(userId);
@@ -290,12 +297,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/sav-tickets', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
+      
+      // Generate unique ticket number
+      const ticketNumber = `SAV-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      
       const ticketData = insertSavTicketSchema.parse({
         ...req.body,
         userId,
       });
       
-      const ticket = await storage.createSavTicket(ticketData);
+      const ticket = await storage.createSavTicket({
+        ...ticketData,
+        ticketNumber,
+      });
       res.json(ticket);
     } catch (error) {
       if (error instanceof z.ZodError) {

@@ -26,6 +26,7 @@ export default function Navbar() {
   const navigationItems = [
     { href: "/", label: "Accueil" },
     { href: "/products", label: "Prestations & Services" },
+    { href: "/about", label: "À propos" },
     { href: "/orders", label: "Commandes", requiresAuth: true },
     { href: "/suggestions", label: "Suggestion" },
     { href: "/sav", label: "SAV", requiresAuth: true },
@@ -44,10 +45,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center" data-testid="logo-link">
             <div className="flex-shrink-0 flex items-center">
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">CBT</span>
-              </div>
-              <span className="ml-2 text-xl font-bold text-foreground hidden sm:block">CBT</span>
+              <span className="text-2xl font-bold text-primary">CBT</span>
             </div>
           </Link>
 
@@ -122,14 +120,18 @@ export default function Navbar() {
                 </Button>
               </div>
             ) : (
-              <Button 
-                onClick={() => window.location.href = "/api/login"}
-                variant="ghost" 
-                size="sm"
-                data-testid="button-login"
-              >
-                <User className="h-5 w-5" />
-              </Button>
+              <div className="flex items-center space-x-2">
+                <Button 
+                  onClick={() => window.location.href = "/api/login"}
+                  variant="ghost" 
+                  size="sm"
+                  className="text-sm"
+                  data-testid="button-login"
+                >
+                  <User className="h-4 w-4 mr-1" />
+                  Connexion
+                </Button>
+              </div>
             )}
 
             {/* Mobile Menu */}

@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { ShoppingCart } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import StarRating from "./star-rating";
@@ -132,13 +133,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Button
             onClick={handleAddToCart}
             disabled={isAdding || !product.inStock}
-            className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded text-sm font-medium transition-colors flex items-center gap-2 ${
               isAdding 
                 ? "bg-green-500 hover:bg-green-600 text-white"
                 : "bg-accent hover:bg-accent/90 text-accent-foreground"
             }`}
             data-testid={`button-add-to-cart-${product.id}`}
           >
+            <ShoppingCart className="h-4 w-4" />
             {isAdding ? "Ajouté!" : product.inStock ? "Ajouter" : "Rupture"}
           </Button>
         </div>
