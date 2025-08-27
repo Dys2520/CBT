@@ -36,18 +36,8 @@ function Router() {
               <Route path="/about" component={About} />
               <Route path="/cart" component={GuestCart} />
               <Route path="/suggestions" component={Suggestions} />
-              <Route path="/admin">
-                {() => {
-                  window.location.href = "/api/login";
-                  return <div className="flex items-center justify-center min-h-screen">
-                    <div className="text-center">
-                      <h2 className="text-xl font-semibold mb-2">Accès administrateur</h2>
-                      <p className="text-muted-foreground mb-4">Redirection vers la page de connexion...</p>
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-                    </div>
-                  </div>;
-                }}
-              </Route>
+              <Route path="/admin" component={Admin} />
+              <Route path="/admin-demo" component={Admin} />
             </>
           ) : (
             <>
