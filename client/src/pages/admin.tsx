@@ -57,10 +57,32 @@ export default function Admin() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // Debug - pour voir si les clics fonctionnent
   const handleTabChange = (tab: string) => {
-    console.log("Switching to tab:", tab);
     setActiveTab(tab);
+  };
+
+  // Fonction pour rendre le contenu de l'onglet actif
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "dashboard":
+        return renderDashboard();
+      case "orders":
+        return renderOrders();
+      case "products":
+        return renderProducts();
+      case "categories":
+        return renderCategories();
+      case "clients":
+        return renderClients();
+      case "services":
+        return renderServices();
+      case "sav":
+        return renderSav();
+      case "settings":
+        return renderSettings();
+      default:
+        return renderDashboard();
+    }
   };
 
   // Données de test pour l'admin - Version étendue avec plus de données
@@ -233,7 +255,7 @@ export default function Admin() {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <div className="w-64 bg-[#1a1f71] text-white p-6 fixed h-full">
+      <div className="w-64 bg-[#1a1f71] text-white p-6 min-h-screen">
         <div className="mb-8">
           <h1 className="text-xl font-bold">CBT Admin</h1>
         </div>
@@ -351,7 +373,7 @@ export default function Admin() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 ml-64">
+<div className="flex-1">
         {/* Header */}
         <div className="bg-white border-b px-8 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900">
@@ -371,13 +393,16 @@ export default function Admin() {
 
         {/* Content */}
         <div className="p-8">
-          {/* Debug indicator */}
-          <div className="mb-4 text-sm text-gray-500">
-            Onglet actuel: {activeTab}
-          </div>
-          
-          {/* Dashboard Tab */}
-          {activeTab === "dashboard" && (
+          {/* Contenu dynamique */}
+          {renderTabContent()}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Fonctions de rendu pour chaque onglet
+  function renderDashboard() {
+    return (
             <div className="space-y-8">
               {/* Primary Stats */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -671,10 +696,11 @@ export default function Admin() {
                 </CardContent>
               </Card>
             </div>
-          )}
+    );
+  }
 
-          {/* Orders Tab */}
-          {activeTab === "orders" && (
+  function renderOrders() {
+    return (
             <div className="space-y-6">
               {/* Stats */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -832,10 +858,11 @@ export default function Admin() {
                 </CardContent>
               </Card>
             </div>
-          )}
+    );
+  }
 
-          {/* Products Tab */}
-          {activeTab === "products" && (
+  function renderProducts() {
+    return (
             <div className="space-y-6">
               {/* Stats */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -969,10 +996,11 @@ export default function Admin() {
                 </CardContent>
               </Card>
             </div>
-          )}
+    );
+  }
 
-          {/* Categories Tab */}
-          {activeTab === "categories" && (
+  function renderCategories() {
+    return (
             <div className="space-y-6">
               <Tabs value="categories" className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
@@ -1030,10 +1058,11 @@ export default function Admin() {
                 </TabsContent>
               </Tabs>
             </div>
-          )}
+    );
+  }
 
-          {/* Clients Tab */}
-          {activeTab === "clients" && (
+  function renderClients() {
+    return (
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold">Gestion des Clients</h2>
@@ -1118,10 +1147,11 @@ export default function Admin() {
                 </CardContent>
               </Card>
             </div>
-          )}
+    );
+  }
 
-          {/* Services Tab */}
-          {activeTab === "services" && (
+  function renderServices() {
+    return (
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold">Gestion des Services</h2>
@@ -1174,10 +1204,11 @@ export default function Admin() {
                 </CardContent>
               </Card>
             </div>
-          )}
+    );
+  }
 
-          {/* SAV Tab */}
-          {activeTab === "sav" && (
+  function renderSav() {
+    return (
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold">Service Après-Vente</h2>
@@ -1264,10 +1295,11 @@ export default function Admin() {
                 </CardContent>
               </Card>
             </div>
-          )}
+    );
+  }
 
-          {/* Settings Tab */}
-          {activeTab === "settings" && (
+  function renderSettings() {
+    return (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold">Paramètres</h2>
               <Card>
@@ -1281,9 +1313,6 @@ export default function Admin() {
                 </CardContent>
               </Card>
             </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+    );
+  }
 }
