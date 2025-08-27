@@ -25,7 +25,8 @@ export default function Navbar() {
 
   const navigationItems = [
     { href: "/", label: "Accueil" },
-    { href: "/products", label: "Prestations & Services" },
+    { href: "/products", label: "Produits" },
+    { href: "/services", label: "Services" },
     { href: "/about", label: "À propos" },
     { href: "/orders", label: "Commandes", requiresAuth: true },
     { href: "/suggestions", label: "Suggestion" },
@@ -77,30 +78,30 @@ export default function Navbar() {
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
             {/* CTA Button */}
-            <Button 
-              className="bg-accent hover:bg-accent/90 text-accent-foreground hidden sm:flex"
-              size="sm"
-              data-testid="button-start-service"
-            >
-              Commencez ici un service
-            </Button>
+            <Link href="/services">
+              <Button 
+                className="bg-accent hover:bg-accent/90 text-accent-foreground hidden sm:flex"
+                size="sm"
+                data-testid="button-start-service"
+              >
+                Commencez ici un service
+              </Button>
+            </Link>
 
             {/* Cart */}
-            {isAuthenticated && (
-              <Link href="/cart">
-                <Button variant="ghost" size="sm" className="relative" data-testid="button-cart">
-                  <ShoppingCart className="h-5 w-5" />
-                  {cartCount > 0 && (
-                    <Badge 
-                      className="absolute -top-1 -right-1 bg-accent text-accent-foreground rounded-full min-w-5 h-5 flex items-center justify-center text-xs"
-                      data-testid="cart-count"
-                    >
-                      {cartCount}
-                    </Badge>
-                  )}
-                </Button>
-              </Link>
-            )}
+            <Link href={isAuthenticated ? "/cart" : "/api/login"}>
+              <Button variant="ghost" size="sm" className="relative" data-testid="button-cart">
+                <ShoppingCart className="h-5 w-5" />
+                {isAuthenticated && cartCount > 0 && (
+                  <Badge 
+                    className="absolute -top-1 -right-1 bg-accent text-accent-foreground rounded-full min-w-5 h-5 flex items-center justify-center text-xs"
+                    data-testid="cart-count"
+                  >
+                    {cartCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
 
             {/* User Menu */}
             {isAuthenticated ? (

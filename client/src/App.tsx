@@ -28,7 +28,13 @@ function Router() {
       <main>
         <Switch>
           {isLoading || !isAuthenticated ? (
-            <Route path="/" component={Landing} />
+            <>
+              <Route path="/" component={Landing} />
+              <Route path="/products" component={Products} />
+              <Route path="/services" component={Services} />
+              <Route path="/about" component={About} />
+              <Route path="/suggestions" component={Suggestions} />
+            </>
           ) : (
             <>
               <Route path="/" component={Home} />
@@ -40,10 +46,9 @@ function Router() {
               <Route path="/orders" component={Orders} />
               <Route path="/sav" component={Sav} />
               <Route path="/admin" component={Admin} />
+              <Route path="/suggestions" component={Suggestions} />
             </>
           )}
-          <Route path="/about" component={About} />
-          <Route path="/suggestions" component={Suggestions} />
           <Route component={NotFound} />
         </Switch>
       </main>

@@ -17,22 +17,71 @@ export default function Products() {
   const [inStockOnly, setInStockOnly] = useState(false);
   const [promotionsOnly, setPromotionsOnly] = useState(false);
 
-  const { data: products = [], isLoading } = useQuery({
+  // Données de test temporaires
+  const testProducts = [
+    {
+      id: "1",
+      name: "MacBook Air M2",
+      price: "2500000",
+      specs: "Puce Apple M2, 8 Go de RAM, 256 Go SSD",
+      brand: "Apple",
+      rating: 4.8,
+      reviewCount: 145,
+      imageUrl: "",
+      isHot: true,
+      isNew: false,
+      inStock: true,
+    },
+    {
+      id: "2", 
+      name: "iPhone 14 Pro",
+      price: "1800000",
+      specs: "6.1 pouces, 128 Go, Caméra 48 MP",
+      brand: "Apple",
+      rating: 4.9,
+      reviewCount: 89,
+      imageUrl: "",
+      isHot: false,
+      isNew: true,
+      inStock: true,
+    },
+    {
+      id: "3",
+      name: "Dell XPS 13",
+      price: "1800000",
+      specs: "Intel Core i7, 16 Go RAM, 512 Go SSD",
+      brand: "Dell",
+      rating: 4.6,
+      reviewCount: 67,
+      imageUrl: "",
+      isHot: false,
+      isNew: false,
+      inStock: true,
+    },
+  ];
+
+  const { data: products = testProducts, isLoading = false } = useQuery({
     queryKey: ["/api/products", {
       search: searchTerm,
-      categoryId: selectedCategory,
-      brand: selectedBrand,
+      categoryId: selectedCategory === "all" ? "" : selectedCategory,
+      brand: selectedBrand === "all" ? "" : selectedBrand,
       minPrice: minPrice ? parseFloat(minPrice) : undefined,
       maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
       inStock: inStockOnly ? true : undefined,
     }],
   });
 
-  const { data: categories = [] } = useQuery({
+  const testCategories = [
+    { id: "1", name: "Ordinateurs" },
+    { id: "2", name: "Smartphones" },
+    { id: "3", name: "Accessoires" },
+  ];
+
+  const { data: categories = testCategories } = useQuery({
     queryKey: ["/api/product-categories"],
   });
 
-  const brands = [...new Set(products.map(p => p.brand).filter(Boolean))];
+  const brands = [...new Set((products as any[]).map((p: any) => p.brand).filter(Boolean))];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,8 +90,8 @@ export default function Products() {
 
   const clearFilters = () => {
     setSearchTerm("");
-    setSelectedCategory("");
-    setSelectedBrand("");
+    setSelectedCategory("all");
+    setSelectedBrand("all");
     setMinPrice("");
     setMaxPrice("");
     setInStockOnly(false);
@@ -147,7 +196,7 @@ export default function Products() {
                 </Card>
               ))}
             </div>
-          ) : products.length === 0 ? (
+          ) : (products as any[]).length === 0 ? (
             <div className="text-center py-16" data-testid="no-products-found">
               <h3 className="text-xl font-bold text-foreground mb-2">Aucun produit trouvé</h3>
               <p className="text-muted-foreground mb-4">
@@ -159,13 +208,13 @@ export default function Products() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {products.map((product) => (
+              {(products as any[]).map((product: any) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}
 
-          {products.length > 0 && (
+          {(products as any[]).length > 0 && (
             <div className="text-center">
               <Button size="lg" data-testid="button-load-more-products">
                 Voir plus de produits
@@ -195,8 +244,8 @@ export default function Products() {
                       <SelectValue placeholder="Toutes les catégories" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Toutes les catégories</SelectItem>
-                      {categories.map((category) => (
+                      <SelectItem value="all">Toutes les catégories</SelectItem>
+                      {(categories as any[]).map((category: any) => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>
@@ -212,7 +261,7 @@ export default function Products() {
                       <SelectValue placeholder="Toutes les marques" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Toutes les marques</SelectItem>
+                      <SelectItem value="all">Toutes les marques</SelectItem>
                       {brands.map((brand) => (
                         <SelectItem key={brand} value={brand}>
                           {brand}
@@ -248,7 +297,7 @@ export default function Products() {
                     <label className="flex items-center">
                       <Checkbox
                         checked={inStockOnly}
-                        onCheckedChange={setInStockOnly}
+                        onCheckedChange={(checked) => setInStockOnly(checked === true)}
                         data-testid="checkbox-in-stock"
                       />
                       <span className="ml-2 text-sm">En stock uniquement</span>
@@ -256,7 +305,7 @@ export default function Products() {
                     <label className="flex items-center">
                       <Checkbox
                         checked={promotionsOnly}
-                        onCheckedChange={setPromotionsOnly}
+                        onCheckedChange={(checked) => setPromotionsOnly(checked === true)}
                         data-testid="checkbox-promotions"
                       />
                       <span className="ml-2 text-sm">Promotions uniquement</span>
@@ -268,7 +317,7 @@ export default function Products() {
               <div className="flex flex-wrap gap-2 mt-6">
                 {selectedCategory && (
                   <Button size="sm" className="bg-primary text-primary-foreground" data-testid="active-filter-category">
-                    {categories.find(c => c.id === selectedCategory)?.name}
+                    {(categories as any[]).find((c: any) => c.id === selectedCategory)?.name}
                   </Button>
                 )}
                 {selectedBrand && (

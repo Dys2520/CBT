@@ -12,14 +12,54 @@ export default function Services() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  const { data: services = [], isLoading } = useQuery({
+  // Données de test temporaires
+  const testServices = [
+    {
+      id: "1",
+      name: "Réparation d'ordinateur",
+      price: "50000",
+      description: "Diagnostic et réparation complète de votre ordinateur",
+      rating: 4.9,
+      reviewCount: 234,
+      imageUrl: "",
+      isNew: false,
+    },
+    {
+      id: "2",
+      name: "Installation système",
+      price: "25000", 
+      description: "Installation et configuration de système d'exploitation",
+      rating: 4.7,
+      reviewCount: 156,
+      imageUrl: "",
+      isNew: true,
+    },
+    {
+      id: "3",
+      name: "Maintenance informatique",
+      price: "35000",
+      description: "Maintenance préventive et curative de vos équipements",
+      rating: 4.8,
+      reviewCount: 98,
+      imageUrl: "",
+      isNew: false,
+    },
+  ];
+
+  const testServiceCategories = [
+    { id: "1", name: "Réparation" },
+    { id: "2", name: "Installation" },
+    { id: "3", name: "Maintenance" },
+  ];
+
+  const { data: services = testServices, isLoading = false } = useQuery({
     queryKey: ["/api/services", {
       search: searchTerm,
       categoryId: selectedCategory,
     }],
   });
 
-  const { data: categories = [] } = useQuery({
+  const { data: categories = testServiceCategories } = useQuery({
     queryKey: ["/api/service-categories"],
   });
 
