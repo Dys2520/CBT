@@ -89,7 +89,7 @@ export default function Navbar() {
             </Link>
 
             {/* Cart */}
-            <Link href={isAuthenticated ? "/cart" : "/api/login"}>
+            <Link href="/cart">
               <Button variant="ghost" size="sm" className="relative" data-testid="button-cart">
                 <ShoppingCart className="h-5 w-5" />
                 {isAuthenticated && cartCount > 0 && (

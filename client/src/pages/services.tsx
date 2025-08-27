@@ -70,7 +70,7 @@ export default function Services() {
 
   const clearFilters = () => {
     setSearchTerm("");
-    setSelectedCategory("");
+    setSelectedCategory("all");
   };
 
   return (
@@ -188,7 +188,7 @@ export default function Services() {
                 </Card>
               ))}
             </div>
-          ) : services.length === 0 ? (
+          ) : (services as any[]).length === 0 ? (
             <div className="text-center py-16" data-testid="no-services-found">
               <h3 className="text-xl font-bold text-foreground mb-2">Aucun service trouvé</h3>
               <p className="text-muted-foreground mb-4">
@@ -200,13 +200,13 @@ export default function Services() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {services.map((service) => (
+              {(services as any[]).map((service: any) => (
                 <ServiceCard key={service.id} service={service} />
               ))}
             </div>
           )}
 
-          {services.length > 0 && (
+          {(services as any[]).length > 0 && (
             <div className="text-center">
               <Button size="lg" data-testid="button-load-more-services">
                 Voir plus de services
@@ -236,8 +236,8 @@ export default function Services() {
                       <SelectValue placeholder="Toutes les catégories" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Toutes les catégories</SelectItem>
-                      {categories.map((category) => (
+                      <SelectItem value="all">Toutes les catégories</SelectItem>
+                      {(categories as any[]).map((category: any) => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>

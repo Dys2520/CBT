@@ -16,6 +16,7 @@ import Sav from "@/pages/sav";
 import Suggestions from "@/pages/suggestions";
 import Admin from "@/pages/admin";
 import About from "@/pages/about";
+import GuestCart from "@/pages/guest-cart";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 
@@ -33,6 +34,7 @@ function Router() {
               <Route path="/products" component={Products} />
               <Route path="/services" component={Services} />
               <Route path="/about" component={About} />
+              <Route path="/cart" component={GuestCart} />
               <Route path="/suggestions" component={Suggestions} />
             </>
           ) : (
