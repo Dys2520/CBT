@@ -1,0 +1,1439 @@
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT - Computer & Business Technology</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@heroicons/react@2.0.18/24/outline/index.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                }
+            },
+        }
+    };
+    </script>
+    <style>
+        :root {
+            --background: hsl(210 40% 96%);
+            --foreground: hsl(210 40% 8%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(210 40% 8%);
+            --primary: hsl(239 84% 32%);
+            --primary-foreground: hsl(0 0% 98%);
+            --secondary: hsl(210 40% 96%);
+            --secondary-foreground: hsl(210 40% 8%);
+            --muted: hsl(210 40% 96%);
+            --muted-foreground: hsl(210 22% 45%);
+            --accent: hsl(16 100% 60%);
+            --accent-foreground: hsl(0 0% 98%);
+            --border: hsl(214 32% 91%);
+            --input: hsl(214 32% 91%);
+            --ring: hsl(239 84% 32%);
+            --radius: 0.5rem;
+        }
+
+        .cbt-gradient {
+            background: linear-gradient(135deg, hsl(239 84% 32%) 0%, hsl(245 80% 45%) 100%);
+        }
+
+        .star-rating {
+            color: #fbbf24;
+        }
+
+        .step-active {
+            background-color: hsl(239 84% 32%);
+            color: white;
+        }
+
+        .step-completed {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .step-inactive {
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body class="bg-background font-sans">
+
+    <!-- Navigation Header -->
+    <nav class="bg-white shadow-sm border-b border-border sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                            <span class="text-primary-foreground font-bold text-lg">CBT</span>
+                        </div>
+                        <span class="ml-2 text-xl font-bold text-foreground hidden sm:block">CBT</span>
+                    </div>
+                </div>
+
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#accueil" class="text-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Accueil</a>
+                        <a href="#prestations" class="text-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Prestations & Services</a>
+                        <a href="#apropos" class="text-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">À propos</a>
+                        <a href="#commandes" class="text-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Commandes</a>
+                        <a href="#suggestion" class="text-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Suggestion</a>
+                        <a href="#sav" class="text-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">SAV</a>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                        Commencez ici un service
+                    </button>
+                    <button class="relative p-2">
+                        <i class="fas fa-shopping-cart text-lg"></i>
+                        <span class="absolute -top-1 -right-1 bg-accent text-accent-foreground rounded-full w-5 h-5 flex items-center justify-center text-xs">3</span>
+                    </button>
+                    <button class="p-2">
+                        <i class="fas fa-user text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Homepage Section -->
+    <section id="accueil" class="cbt-gradient py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="absolute inset-0 overflow-hidden">
+                    <div class="absolute -top-24 -left-24 w-96 h-96 border border-white/20 rounded-3xl transform rotate-45"></div>
+                    <div class="absolute -bottom-24 -right-24 w-96 h-96 border border-white/20 rounded-3xl transform rotate-45"></div>
+                    <div class="absolute top-1/2 left-1/4 w-32 h-32 border border-white/20 rounded-2xl transform rotate-12"></div>
+                    <div class="absolute top-1/4 right-1/4 w-48 h-48 border border-white/20 rounded-2xl transform -rotate-12"></div>
+                </div>
+                
+                <div class="relative z-10">
+                    <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                        Votre partenaire technologique,<br />
+                        solutions professionnelles
+                    </h1>
+                    <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                        Découvrez notre gamme complète de produits informatiques et services professionnels pour répondre à tous vos besoins technologiques.
+                    </p>
+                    <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
+                        Découvrir nos solutions
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-16 flex justify-center space-x-2">
+                <div class="w-8 h-1 bg-white rounded-full"></div>
+                <div class="w-2 h-1 bg-white/50 rounded-full"></div>
+                <div class="w-2 h-1 bg-white/50 rounded-full"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Intro Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold text-foreground mb-4">CBT - Computer & Business Technology</h2>
+            <p class="text-lg text-muted-foreground max-w-3xl mx-auto">
+                Votre partenaire informatique de confiance depuis 2003. Solutions professionnelles au meilleur prix.
+            </p>
+
+            <div class="mt-12 grid grid-cols-2 md:grid-cols-5 gap-4">
+                <button class="px-6 py-2 bg-primary text-primary-foreground rounded-full text-sm font-medium">Tous</button>
+                <button class="px-6 py-2 bg-secondary text-secondary-foreground rounded-full text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-colors">Ordinateurs</button>
+                <button class="px-6 py-2 bg-secondary text-secondary-foreground rounded-full text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-colors">Périphériques</button>
+                <button class="px-6 py-2 bg-secondary text-secondary-foreground rounded-full text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-colors">Services</button>
+                <button class="px-6 py-2 bg-secondary text-secondary-foreground rounded-full text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-colors">Mobiliers</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Product Card 1 -->
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Modern laptop workstation in office environment -->
+                        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Ordinateur Portable Pro" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-accent text-accent-foreground px-2 py-1 rounded text-xs font-bold">HOT</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Ordinateur Portable Pro</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(24)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">Intel i7, 16GB RAM, 512GB SSD</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">765 000 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Professional server equipment in data center -->
+                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Serveur NAS Pro" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Serveur NAS Pro</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(18)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">4 baies, RAID 5/6, 10G Ethernet</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">275 000 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- High-end professional printer in office setting -->
+                        <img src="https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Imprimante Laser Pro" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">Nouveau</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Imprimante Laser Pro</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(5)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">A4/A3, 60ppm, Wifi, Scan, Copy</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">185 700 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 -->
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Professional 4K monitor display setup -->
+                        <img src="https://images.unsplash.com/photo-1547082299-de196ea013d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Écran 27 4K" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Écran 27" 4K</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(4)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">IPS, 99% sRGB, USB-C, adjustement</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">65 000 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <button class="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg font-medium">
+                    Voir plus de produits
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Access Section -->
+    <section class="py-16 bg-muted">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-foreground mb-12">Accès rapide</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-card p-6 rounded-xl text-center shadow-sm border border-border">
+                    <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-tools text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-bold text-foreground mb-2">Prestations & Services</h3>
+                    <p class="text-sm text-muted-foreground mb-4">Découvrez nos services de maintenance et installation professionnels.</p>
+                    <button class="text-accent font-medium text-sm hover:underline">En savoir plus →</button>
+                </div>
+
+                <div class="bg-card p-6 rounded-xl text-center shadow-sm border border-border">
+                    <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-question-circle text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold text-foreground mb-2">À propos</h3>
+                    <p class="text-sm text-muted-foreground mb-4">Notre histoire, valeurs et équipe technique professionnelle.</p>
+                    <button class="text-accent font-medium text-sm hover:underline">En savoir plus →</button>
+                </div>
+
+                <div class="bg-card p-6 rounded-xl text-center shadow-sm border border-border">
+                    <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shopping-bag text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="font-bold text-foreground mb-2">Mes Commandes</h3>
+                    <p class="text-sm text-muted-foreground mb-4">Suivez vos commandes et consultez l'historique de vos achats.</p>
+                    <button class="text-accent font-medium text-sm hover:underline">Consulter →</button>
+                </div>
+
+                <div class="bg-card p-6 rounded-xl text-center shadow-sm border border-border">
+                    <div class="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-lightbulb text-2xl text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-foreground mb-2">Faire une suggestion</h3>
+                    <p class="text-sm text-muted-foreground mb-4">Partagez vos idées pour nous aider à améliorer nos services.</p>
+                    <button class="text-accent font-medium text-sm hover:underline">Suggérer →</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prestations & Services Section -->
+    <section id="prestations" class="cbt-gradient py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4">Prestations & Services</h2>
+                <p class="text-white/90 max-w-3xl mx-auto">
+                    Découvrez notre gamme complète de produits informatiques et services professionnels pour répondre à tous vos besoins technologiques.
+                </p>
+            </div>
+
+            <div class="max-w-2xl mx-auto mb-8">
+                <div class="relative">
+                    <input type="text" placeholder="Rechercher un produit ou service..." class="w-full px-4 py-3 pr-12 rounded-lg border border-input bg-card text-foreground">
+                    <button class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                        <i class="fas fa-search text-muted-foreground"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-center space-x-4 mb-12">
+                <button class="bg-white text-primary px-6 py-2 rounded-full font-medium flex items-center">
+                    <i class="fas fa-laptop mr-2"></i>
+                    Nos Produits
+                </button>
+                <button class="bg-white/20 text-white px-6 py-2 rounded-full font-medium flex items-center hover:bg-white hover:text-primary transition-colors">
+                    <i class="fas fa-tools mr-2"></i>
+                    Nos Services
+                </button>
+            </div>
+
+            <div class="flex justify-center flex-wrap gap-4 mb-12">
+                <button class="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">Tous</button>
+                <button class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-primary transition-colors">Ordinateurs</button>
+                <button class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-primary transition-colors">Périphériques</button>
+                <button class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-primary transition-colors">Serveurs</button>
+                <button class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-primary transition-colors">Mobiliers</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Grid -->
+    <section class="bg-background py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                
+                <!-- @MAP: products.map(product => ( -->
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Professional laptop computer on modern desk -->
+                        <img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Ordinateur Portable Pro" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-accent text-accent-foreground px-2 py-1 rounded text-xs font-bold">HOT</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground" data-bind="product.name">Ordinateur Portable Pro</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2" data-bind="product.reviews">(24)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3" data-bind="product.specs">Intel i7, 16GB RAM, 512GB SSD</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground" data-bind="product.price">765 000 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium" data-event="click:addToCart">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Network server equipment in modern data center -->
+                        <img src="https://pixabay.com/get/gd3b2a93291b5887b06f12025fe82b0a3f6befe2f25dc6e0a0d874e7fa344d98dddd829813e25b449e81ccb9cb2fd819b837186e91e9817bbf191508bb9df4106_1280.jpg" alt="Serveur NAS Pro" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Serveur NAS Pro</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(18)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">4 baies, RAID 5/6, 10G Ethernet</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">275 000 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Modern professional printer in office environment -->
+                        <img src="https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Imprimante Laser Pro" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">Nouveau</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Imprimante Laser Pro</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(5)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">A4/A3, 60ppm, Wifi, Scan, Copy</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">185 700 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- High-resolution 4K monitor display setup -->
+                        <img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Écran 27 4K" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Écran 27" 4K</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(4)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">IPS, 99% sRGB, USB-C, adjustement</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">65 000 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Row -->
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Professional workstation desktop computer -->
+                        <img src="https://images.unsplash.com/photo-1547082299-de196ea013d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Ordinateur Portable HP" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Ordinateur Portable HP</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(19)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">Intel i5, 8GB RAM, 256GB SSD</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">599 000 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Professional network attached storage system -->
+                        <img src="https://images.unsplash.com/photo-1588508065123-287b28e013da?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Serveur NAS" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Serveur NAS</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(10)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">2 baies, Gigabit Ethernet</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">185 000 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- High-quality professional printer in modern office -->
+                        <img src="https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Imprimante Laser" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">Nouveau</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Imprimante Laser</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(5)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">A4, 30ppm, WiFi, Scan</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">165 700 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Professional curved monitor display -->
+                        <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Écran 24 HD" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Écran 24" HD</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(4)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">Full HD, IPS, VESA mount</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">45 000 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+
+            <div class="text-center">
+                <button class="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg font-medium">
+                    Voir plus de produits
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Search Section -->
+    <section class="bg-muted py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold text-foreground mb-8">Recherche avancée</h2>
+            <p class="text-muted-foreground mb-8">Trouvez rapidement le produit dont vous avez besoin</p>
+
+            <div class="bg-card p-8 rounded-xl shadow-sm border border-border">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-2">Catégorie</label>
+                        <select class="w-full px-4 py-2 border border-input rounded-lg bg-card text-foreground">
+                            <option>Toutes les catégories</option>
+                            <option>Ordinateurs</option>
+                            <option>Serveurs</option>
+                            <option>Imprimantes</option>
+                            <option>Écrans</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-2">Marque</label>
+                        <select class="w-full px-4 py-2 border border-input rounded-lg bg-card text-foreground">
+                            <option>Toutes les marques</option>
+                            <option>HP</option>
+                            <option>Dell</option>
+                            <option>Lenovo</option>
+                            <option>Canon</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-2">Prix (FCFA)</label>
+                        <div class="flex space-x-2">
+                            <input type="number" placeholder="Min" class="w-full px-4 py-2 border border-input rounded-lg bg-card text-foreground">
+                            <input type="number" placeholder="Max" class="w-full px-4 py-2 border border-input rounded-lg bg-card text-foreground">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-2">Disponibilité</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2">
+                                <span class="text-sm">En stock uniquement</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2">
+                                <span class="text-sm">Promotions uniquement</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2 mt-6">
+                    <button class="px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm">Ordinateurs</button>
+                    <button class="px-4 py-2 bg-secondary text-secondary-foreground rounded-full text-sm">Serveurs</button>
+                    <button class="px-4 py-2 bg-secondary text-secondary-foreground rounded-full text-sm">Hot</button>
+                </div>
+
+                <div class="flex justify-between items-center mt-6">
+                    <button class="text-accent font-medium">Réinitialiser</button>
+                    <button class="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-2 rounded-lg font-medium">
+                        Appliquer les filtres
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-foreground mb-4">Nos Services</h2>
+                <p class="text-muted-foreground max-w-3xl mx-auto">
+                    Services professionnels de maintenance, installation et conseil informatique.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- IT technician working on computer maintenance -->
+                        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Maintenance informatique" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Maintenance informatique</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(24)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">Nettoyage, mise à jour, prévention</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">15 800 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Commander</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Professional IT installation service -->
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Installation de matériel" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Installation de matériel</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(18)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">Ordinateurs, imprimantes, logiciels</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">75 500 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Commander</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Professional IT troubleshooting and repair service -->
+                        <img src="https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Dépannage technique" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">Nouveau</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Dépannage technique</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(5)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">Pannes, virus, récupération</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">168 700 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Commander</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+                    <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 relative">
+                        <!-- Professional IT consulting and advisory service -->
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" alt="Conseil en informatique" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-foreground">Conseil en informatique</h3>
+                        <div class="flex items-center my-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="fas fa-star star-rating"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-sm text-muted-foreground ml-2">(4)</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground mb-3">Audit, configuration, environnement</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold text-foreground">65 000 FCFA</span>
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2 rounded text-sm font-medium">Commander</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart/Checkout Section -->
+    <section id="commandes" class="py-16 bg-muted">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Progress Steps -->
+            <div class="flex items-center justify-center mb-8">
+                <div class="flex items-center space-x-4">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full step-completed flex items-center justify-center">
+                            <i class="fas fa-shopping-cart text-white"></i>
+                        </div>
+                        <span class="text-sm font-medium mt-2">Panier</span>
+                    </div>
+                    <div class="w-16 h-0.5 bg-green-500"></div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full step-completed flex items-center justify-center">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <span class="text-sm font-medium mt-2">Identification</span>
+                    </div>
+                    <div class="w-16 h-0.5 bg-green-500"></div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full step-completed flex items-center justify-center">
+                            <i class="fas fa-truck text-white"></i>
+                        </div>
+                        <span class="text-sm font-medium mt-2">Livraison</span>
+                    </div>
+                    <div class="w-16 h-0.5 bg-green-500"></div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full step-completed flex items-center justify-center">
+                            <i class="fas fa-credit-card text-white"></i>
+                        </div>
+                        <span class="text-sm font-medium mt-2">Paiement</span>
+                    </div>
+                    <div class="w-16 h-0.5 bg-green-500"></div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full step-completed flex items-center justify-center">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <span class="text-sm font-medium mt-2">Confirmation</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Confirmation -->
+            <div class="bg-card rounded-xl p-8 shadow-sm border border-border">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-foreground mb-2">Commande confirmée !</h2>
+                    <p class="text-muted-foreground">
+                        Merci pour votre commande. Votre numéro de commande est<br />
+                        <strong class="text-foreground">CMD-12345678</strong>
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Order Details -->
+                    <div class="space-y-6">
+                        <div class="bg-secondary/50 rounded-lg p-4">
+                            <h3 class="font-bold text-primary mb-3">Informations de commande</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-muted-foreground">Numéro de commande:</span>
+                                    <span class="font-medium">CMD-12345678</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-muted-foreground">Date de commande:</span>
+                                    <span class="font-medium">31 mai 2025</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-muted-foreground">Statut de la commande:</span>
+                                    <span class="font-medium text-green-600">Confirmée</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-muted-foreground">Méthode de paiement:</span>
+                                    <span class="font-medium">Paiement par chèque</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-secondary/50 rounded-lg p-4">
+                            <h3 class="font-bold text-primary mb-3">Informations de livraison</h3>
+                            <div class="space-y-2 text-sm">
+                                <div>
+                                    <span class="text-muted-foreground">Adresse de livraison:</span><br />
+                                    <span class="font-medium">Jean Dupont</span><br />
+                                    123 rue de la République<br />
+                                    Cotonou, 01 BP 1234<br />
+                                    Bénin
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-muted-foreground">Méthode de livraison:</span>
+                                    <span class="font-medium">Livraison standard</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-muted-foreground">Date de livraison estimée:</span>
+                                    <span class="font-medium">15-17 juin 2025</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div>
+                        <h3 class="font-bold text-primary mb-4">Articles commandés</h3>
+                        <div class="bg-secondary/20 rounded-lg overflow-hidden">
+                            <table class="w-full">
+                                <thead class="bg-secondary">
+                                    <tr class="text-sm">
+                                        <th class="text-left p-3">PRODUIT</th>
+                                        <th class="text-center p-3">QTÉ</th>
+                                        <th class="text-right p-3">PRIX</th>
+                                        <th class="text-right p-3">TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm">
+                                    <tr class="border-b border-border">
+                                        <td class="p-3">Laptop HP ProBook</td>
+                                        <td class="text-center p-3">1</td>
+                                        <td class="text-right p-3">450 000 FCFA</td>
+                                        <td class="text-right p-3">450 000 FCFA</td>
+                                    </tr>
+                                    <tr class="border-b border-border">
+                                        <td class="p-3">Imprimante Canon</td>
+                                        <td class="text-center p-3">1</td>
+                                        <td class="text-right p-3">175 000 FCFA</td>
+                                        <td class="text-right p-3">175 000 FCFA</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="p-4 bg-secondary/50 space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span>Sous-total</span>
+                                    <span>625 000 FCFA</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span>Livraison</span>
+                                    <span>5 000 FCFA</span>
+                                </div>
+                                <div class="flex justify-between font-bold">
+                                    <span>Total</span>
+                                    <span>630 000 FCFA</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Instructions -->
+                <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h4 class="font-bold text-primary mb-2">Instructions de paiement</h4>
+                    <p class="text-sm text-foreground mb-3">
+                        <strong>Paiement par chèque</strong><br />
+                        Veuillez libeller votre chèque à l'ordre de <strong>CBT - Code Barr Tech</strong> et l'envoyer à l'adresse suivante:
+                    </p>
+                    
+                    <div class="bg-card border rounded p-4 text-sm">
+                        <strong>CBT - Code Barr Tech</strong><br />
+                        Service Comptabilité<br />
+                        123 Avenue de la République<br />
+                        Cotonou, Bénin
+                    </div>
+
+                    <div class="bg-yellow-100 border border-yellow-300 rounded p-3 mt-4">
+                        <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                        <strong>Important :</strong> Veuillez indiquer votre numéro de commande <strong>CMD-12345678</strong> au dos de votre chèque. Votre commande sera traitée une fois que nous aurons reçu et encaissé votre chèque.
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mt-8">
+                    <button class="flex items-center text-accent hover:underline">
+                        <i class="fas fa-print mr-2"></i>
+                        Imprimer la confirmation
+                    </button>
+                    <div class="space-x-4">
+                        <button class="bg-secondary hover:bg-secondary/80 text-secondary-foreground px-6 py-2 rounded-lg">
+                            Suivre ma commande
+                        </button>
+                        <button class="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg">
+                            Continuer mes achats
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SAV Section -->
+    <section id="sav" class="py-16 bg-background">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-foreground mb-4">Service Après-Vente</h2>
+                <p class="text-muted-foreground max-w-2xl mx-auto">
+                    Un problème avec votre commande ? Notre équipe SAV est à votre disposition pour vous aider avec les retours, échanges et résolutions de problèmes.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <!-- Return Request Form -->
+                <div class="bg-card rounded-xl p-8 shadow-sm border border-border">
+                    <h3 class="text-xl font-bold text-foreground mb-6">Demande de retour</h3>
+                    
+                    <form class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Numéro de commande *</label>
+                            <input type="text" placeholder="CMD-12345678" class="w-full px-4 py-3 border border-input rounded-lg bg-card text-foreground">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Email de contact *</label>
+                            <input type="email" placeholder="votre.email@example.com" class="w-full px-4 py-3 border border-input rounded-lg bg-card text-foreground">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Article concerné *</label>
+                            <select class="w-full px-4 py-3 border border-input rounded-lg bg-card text-foreground">
+                                <option>Choisir un article</option>
+                                <option>Laptop HP ProBook</option>
+                                <option>Imprimante Canon</option>
+                                <option>Écran 27" 4K</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Type de demande *</label>
+                            <select class="w-full px-4 py-3 border border-input rounded-lg bg-card text-foreground">
+                                <option>Sélectionner le type</option>
+                                <option>Produit défectueux</option>
+                                <option>Produit endommagé à la livraison</option>
+                                <option>Mauvais produit livré</option>
+                                <option>Changement d'avis</option>
+                                <option>Autre</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Description du problème *</label>
+                            <textarea rows="4" placeholder="Décrivez le problème rencontré en détail..." class="w-full px-4 py-3 border border-input rounded-lg bg-card text-foreground resize-none"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="flex items-start">
+                                <input type="checkbox" class="mr-3 mt-1">
+                                <span class="text-sm text-foreground">
+                                    J'accepte que mes données soient traitées conformément à la 
+                                    <a href="#" class="text-accent hover:underline">politique de confidentialité</a>
+                                </span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-lg font-medium">
+                            Soumettre la demande
+                        </button>
+                    </form>
+                </div>
+
+                <!-- SAV Status & Info -->
+                <div class="space-y-8">
+                    <!-- Current Returns -->
+                    <div class="bg-card rounded-xl p-8 shadow-sm border border-border">
+                        <h3 class="text-xl font-bold text-foreground mb-6">Mes demandes en cours</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="border border-border rounded-lg p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h4 class="font-medium text-foreground">Demande #SAV-001</h4>
+                                        <p class="text-sm text-muted-foreground">Commande CMD-12345678</p>
+                                    </div>
+                                    <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium">En attente</span>
+                                </div>
+                                <p class="text-sm text-foreground">Produit défectueux - Laptop HP ProBook</p>
+                                <p class="text-xs text-muted-foreground mt-2">Créée le 28 mai 2025</p>
+                            </div>
+
+                            <div class="border border-border rounded-lg p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h4 class="font-medium text-foreground">Demande #SAV-002</h4>
+                                        <p class="text-sm text-muted-foreground">Commande CMD-11223344</p>
+                                    </div>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">En cours</span>
+                                </div>
+                                <p class="text-sm text-foreground">Retour produit - Imprimante Canon</p>
+                                <p class="text-xs text-muted-foreground mt-2">Créée le 25 mai 2025</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SAV Info -->
+                    <div class="bg-card rounded-xl p-8 shadow-sm border border-border">
+                        <h3 class="text-xl font-bold text-foreground mb-6">Informations SAV</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-clock text-blue-600 mt-1"></i>
+                                <div>
+                                    <h4 class="font-medium text-foreground">Délais de traitement</h4>
+                                    <p class="text-sm text-muted-foreground">Les demandes sont traitées sous 2-3 jours ouvrés</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-undo text-green-600 mt-1"></i>
+                                <div>
+                                    <h4 class="font-medium text-foreground">Politique de retour</h4>
+                                    <p class="text-sm text-muted-foreground">Retours acceptés dans les 14 jours après livraison</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-headset text-purple-600 mt-1"></i>
+                                <div>
+                                    <h4 class="font-medium text-foreground">Support technique</h4>
+                                    <p class="text-sm text-muted-foreground">Assistance par email et téléphone</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-6 border-t border-border">
+                            <h4 class="font-medium text-foreground mb-3">Contactez notre équipe SAV</h4>
+                            <div class="flex space-x-4">
+                                <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                                    <i class="fas fa-envelope mr-2"></i>
+                                    Email SAV
+                                </button>
+                                <button class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                                    <i class="fas fa-phone mr-2"></i>
+                                    Appel SAV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Suggestions Section -->
+    <section id="suggestion" class="py-16 bg-background">
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-foreground mb-4">Formulaire de suggestions</h2>
+                <p class="text-muted-foreground">
+                    Partagez vos idées, commentaires ou réclamations pour nous aider à améliorer nos services.
+                </p>
+            </div>
+
+            <div class="bg-card rounded-xl p-8 shadow-sm border border-border">
+                <form class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Nom (facultatif)</label>
+                            <input type="text" placeholder="Votre nom" class="w-full px-4 py-3 border border-input rounded-lg bg-card text-foreground">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">E-mail *</label>
+                            <input type="email" placeholder="Votre email" class="w-full px-4 py-3 border border-input rounded-lg bg-card text-foreground">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-2">Sujet *</label>
+                        <input type="text" placeholder="Le sujet de votre suggestion" class="w-full px-4 py-3 border border-input rounded-lg bg-card text-foreground">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-2">Catégorie de suggestion *</label>
+                        <select class="w-full px-4 py-3 border border-input rounded-lg bg-card text-foreground">
+                            <option value="">Choisir</option>
+                            <option value="produits">Nouveaux produits</option>
+                            <option value="services">Amélioration des services</option>
+                            <option value="site">Fonctionnalité du site</option>
+                            <option value="livraison">Livraison</option>
+                            <option value="sav">Service après-vente</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-foreground mb-2">Message *</label>
+                        <textarea rows="6" placeholder="Décrivez votre suggestion en détail..." class="w-full px-4 py-3 border border-input rounded-lg bg-card text-foreground resize-none"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="flex items-start">
+                            <input type="checkbox" class="mr-3 mt-1" required>
+                            <span class="text-sm text-foreground">
+                                J'accepte que mes données soient traitées conformément à la 
+                                <a href="#" class="text-accent hover:underline">politique de confidentialité</a> *
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-lg font-medium">
+                        Envoyer ma suggestion
+                    </button>
+                </form>
+            </div>
+
+            <!-- How We Handle Suggestions -->
+            <div class="mt-12">
+                <h3 class="text-xl font-bold text-foreground mb-8 text-center">Comment nous traitons vos suggestions</h3>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-eye text-blue-600 text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-foreground mb-2">Examen</h4>
+                        <p class="text-sm text-muted-foreground">
+                            Toutes les suggestions sont examinées par notre équipe dans un délai de 48 heures.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-envelope text-green-600 text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-foreground mb-2">Retour</h4>
+                        <p class="text-sm text-muted-foreground">
+                            Nous vous contacterons par e-mail si nous avons besoin d'informations supplémentaires.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-cogs text-purple-600 text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-foreground mb-2">Implémentation</h4>
+                        <p class="text-sm text-muted-foreground">
+                            Les suggestions pertinentes sont intégrées dans notre processus d'amélioration continue.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact/Help Section -->
+    <section class="cbt-gradient py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold text-white mb-4">Besoin d'aide ? Contactez-nous</h2>
+            <p class="text-white/90 mb-8 max-w-2xl mx-auto">
+                Notre équipe est à votre disposition pour répondre à toutes vos questions
+            </p>
+            <div class="flex justify-center space-x-4">
+                <button class="bg-white text-primary px-6 py-3 rounded-lg font-medium hover:bg-white/90 transition-colors">
+                    <i class="fas fa-envelope mr-2"></i>
+                    contact@cbt.com
+                </button>
+                <button class="bg-white text-primary px-6 py-3 rounded-lg font-medium hover:bg-white/90 transition-colors">
+                    <i class="fas fa-phone mr-2"></i>
+                    +229 00000000
+                </button>
+                <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    <i class="fab fa-whatsapp mr-2"></i>
+                    WhatsApp
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">CBT</span>
+                        </div>
+                        <span class="ml-2 text-xl font-bold">CBT</span>
+                    </div>
+                    <p class="text-gray-300 text-sm mb-4">
+                        Votre partenaire informatique de confiance depuis 2003. Solutions professionnelles au meilleur prix.
+                    </p>
+                    <p class="text-gray-400 text-xs">
+                        Solutions professionnelles adaptées aux meilleurs prix.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Liens rapides</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#accueil" class="text-gray-300 hover:text-white transition-colors">Accueil</a></li>
+                        <li><a href="#prestations" class="text-gray-300 hover:text-white transition-colors">Prestations & Services</a></li>
+                        <li><a href="#apropos" class="text-gray-300 hover:text-white transition-colors">À propos</a></li>
+                        <li><a href="#commandes" class="text-gray-300 hover:text-white transition-colors">Commandes</a></li>
+                        <li><a href="#suggestion" class="text-gray-300 hover:text-white transition-colors">Suggestion</a></li>
+                        <li><a href="#sav" class="text-gray-300 hover:text-white transition-colors">SAV</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Informations légales</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Mentions légales</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Conditions générales de ventes</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Politique de confidentialité</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Livraisons</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Newsletter</h3>
+                    <p class="text-gray-300 text-sm mb-4">
+                        Inscrivez-vous pour recevoir nos offres et actualités
+                    </p>
+                    <form class="space-y-3">
+                        <input 
+                            type="email" 
+                            placeholder="Votre email" 
+                            class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-400"
+                        >
+                        <button 
+                            type="submit" 
+                            class="w-full bg-accent hover:bg-accent/90 text-white py-2 rounded font-medium transition-colors"
+                        >
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2025 CBT - Computer & Business Technology. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // TODO: Implement business logic, API calls, state management
+        
+        (function() {
+            // Navigation scroll behavior
+            const nav = document.querySelector('nav');
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+            // Smooth scrolling for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        const offsetTop = targetSection.offsetTop - nav.offsetHeight;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Add to cart functionality (mock)
+            const addToCartButtons = document.querySelectorAll('[data-event="click:addToCart"]');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Mock add to cart functionality
+                    this.textContent = 'Ajouté!';
+                    this.classList.add('bg-green-500', 'hover:bg-green-600');
+                    this.classList.remove('bg-accent', 'hover:bg-accent/90');
+                    
+                    setTimeout(() => {
+                        this.textContent = 'Ajouter';
+                        this.classList.remove('bg-green-500', 'hover:bg-green-600');
+                        this.classList.add('bg-accent', 'hover:bg-accent/90');
+                    }, 2000);
+
+                    // Update cart counter
+                    const cartCounter = document.querySelector('.fa-shopping-cart + span');
+                    if (cartCounter) {
+                        const currentCount = parseInt(cartCounter.textContent);
+                        cartCounter.textContent = currentCount + 1;
+                    }
+                });
+            });
+
+            // Form submissions (mock)
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // Mock form submission
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    
+                    submitBtn.textContent = 'Envoi en cours...';
+                    submitBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        submitBtn.textContent = 'Envoyé!';
+                        submitBtn.classList.add('bg-green-500');
+                        
+                        setTimeout(() => {
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                            submitBtn.classList.remove('bg-green-500');
+                            this.reset();
+                        }, 2000);
+                    }, 1000);
+                });
+            });
+
+            // Search functionality (mock)
+            const searchInputs = document.querySelectorAll('input[placeholder*="Rechercher"]');
+            searchInputs.forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        // Mock search functionality
+                        console.log('Searching for:', this.value);
+                    }
+                });
+            });
+
+            // Filter functionality (mock)
+            const filterButtons = document.querySelectorAll('button[class*="rounded-full"]');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from siblings
+                    const siblings = this.parentElement.children;
+                    Array.from(siblings).forEach(sibling => {
+                        sibling.classList.remove('bg-primary', 'text-primary-foreground');
+                        sibling.classList.add('bg-secondary', 'text-secondary-foreground');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('bg-primary', 'text-primary-foreground');
+                    this.classList.remove('bg-secondary', 'text-secondary-foreground');
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
