@@ -37,7 +37,7 @@ export async function setupAuth(app: Express) {
 
 // Middleware d'authentification locale - simule un admin connecté
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
-  // Simule un utilisateur admin connecté pour le développement local
+  // En mode local, on simule un utilisateur admin connecté
   (req as any).user = {
     claims: {
       sub: "local_admin_cbt",
@@ -46,6 +46,8 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
       last_name: "CBT"
     }
   };
+  
+  // Toujours autoriser en mode local
   next();
 };
 
